@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // import DeleteBtn from "../../components/DeleteBtn";
 import Jumbotron from "../../components/Jumbotron";
-// import API from "../../utils/API";
+import API from "../../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../../components/Grid";
 // import { List, ListItem } from "../../components/List";
@@ -10,7 +10,7 @@ import { Input, TextArea, FormBtn } from "../../components/Form";
 class Articles extends Component {
     state = {
         books: [],
-        title: "",
+        keyword: "",
         author: "",
         synopsis: ""
     };
@@ -18,7 +18,7 @@ class Articles extends Component {
     //   loadBooks = () => {
     //     API.getBooks()
     //       .then(res =>
-    //         this.setState({ books: res.data, title: "", author: "", synopsis: "" })
+    //         this.setState({ books: res.data, keyword: "", author: "", synopsis: "" })
     //       )
     //       .catch(err => console.log(err));
     //   };
@@ -34,20 +34,22 @@ class Articles extends Component {
         this.setState({
             [name]: value
         });
+        console.log(this.state)
     };
 
-    //   handleFormSubmit = event => {
-    //     event.preventDefault();
-    //     if (this.state.title && this.state.author) {
-    //       API.saveBook({
-    //         title: this.state.title,
-    //         author: this.state.author,
-    //         synopsis: this.state.synopsis
-    //       })
-    //         .then(res => this.loadBooks())
-    //         .catch(err => console.log(err));
-    //     }
-    //   };
+      handleFormSubmit = event => {
+        event.preventDefault();
+        let queryURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?
+                        api-key=b9f91d369ff59547cd47b931d8cbc56b:0:74623931&q=${this.state.keyword}`
+        if (this.state.keyword && this.state.startYear && this.state.endYear) {
+          $.ajax({
+            url: queryURL,
+            method: "GET"
+          })
+            .then(res => console.log(res))
+            .catch(err => console.log(err));
+        }
+      };
 
     render() {
         return (
@@ -60,11 +62,11 @@ class Articles extends Component {
                         </Jumbotron>
                         <form>
                             <Input
-                                label="Article Title"
-                                value={this.state.title}
+                                label="Search keyword"
+                                value={this.state.keyword}
                                 onChange={this.handleInputChange}
-                                name="title"
-                                placeholder="Title (required)"
+                                name="keyword"
+                                placeholder="Search term (required)"
                             />
                             <Input
                                 label="Start Year for Article"
@@ -81,7 +83,7 @@ class Articles extends Component {
                                 placeholder="End year for search"
                             />
                             <FormBtn
-                                disabled={!(this.state.author && this.state.title)}
+                                disabled={!(this.state.keyword && this.state.startYear && this.state.endYear)}
                                 onClick={this.handleFormSubmit}
                             >Search Articles
                             </FormBtn>
@@ -97,7 +99,7 @@ class Articles extends Component {
                   <ListItem key={book._id}>
                     <Link to={"/books/" + book._id}>
                       <strong>
-                        {book.title} by {book.author}
+                        {book.keyword} by {book.author}
                       </strong>
                     </Link>
                     <DeleteBtn onClick={() => this.deleteBook(book._id)} />
