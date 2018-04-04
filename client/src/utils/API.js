@@ -1,9 +1,10 @@
 import axios from "axios";
 
+
 export default {
     // Search articles
-    searchArticle: function (query) {
-        return axios.get("/search")
+    searchArticle: function (keyword, startYear, endYear) {
+        return axios.get(`https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=b9f91d369ff59547cd47b931d8cbc56b:0:74623931&q=${keyword}&begin_date=${startYear}0101&end_date=${endYear}0101`)
     },
     // Gets all articles
     getArticle: function () {
@@ -25,17 +26,17 @@ export default {
 
 
 
-event.preventDefault();
-let queryURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?
-                api-key=b9f91d369ff59547cd47b931d8cbc56b:0:74623931&q=${this.state.keyword}`
-if (this.state.keyword && this.state.startYear && this.state.endYear) {
-  $.ajax({
-    url: queryURL,
-    method: "GET"
-  })
-    .then(res => console.log(res))
-    .catch(err => console.log(err));
-}
+// event.preventDefault();
+// let queryURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?
+//                 api-key=b9f91d369ff59547cd47b931d8cbc56b:0:74623931&q=${this.state.keyword}`
+// if (this.state.keyword && this.state.startYear && this.state.endYear) {
+//   $.ajax({
+//     url: queryURL,
+//     method: "GET"
+//   })
+//     .then(res => console.log(res))
+//     .catch(err => console.log(err));
+// }
 
 // axios
 // .get("http://www.recipepuppy.com/api/", { params: req.query })
